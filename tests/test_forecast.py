@@ -39,6 +39,8 @@ class ForecastTests(TestCase):
             result = forecast.forecast("Los Angeles")
         self.assertEqual(result["days"][0]["conditions"], "partly cloudy")
         self.assertEqual(result["days"][1]["rain_chance_percent"], 40)
+        self.assertEqual((result["days"][0]["high_f"], result["days"][0]["low_f"]), (68.9, 53.6))
+        self.assertEqual((result["days"][0]["high_c"], result["days"][0]["low_c"]), (20.5, 12.0))
         self.assertIn("timezone=America%2FLos_Angeles", result["source_url"])
         self.assertIn("retrieved_at", result)
         self.assertEqual(fetch.call_count, 2)

@@ -27,6 +27,10 @@ WEATHER_CODES = {
 }
 
 
+def fahrenheit(celsius: float) -> float:
+    return round(celsius * 9 / 5 + 32, 1)
+
+
 def city_name(parts: list[str]) -> str:
     value = " ".join(parts).strip()
     if not 2 <= len(value) <= 80 or not re.fullmatch(r"[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ .'-]*", value):
@@ -40,7 +44,7 @@ def fetch_json(url: str) -> dict:
     last_error: Exception | None = None
     for attempt in range(2):
         try:
-            with urlopen(Request(url, headers={"User-Agent": "Assignment3-Weather/0.1"}),
+            with urlopen(Request(url, headers={"User-Agent": "Assignment3-Weather/0.2"}),
                          timeout=12) as response:
                 if response.status != 200:
                     raise RuntimeError("weather provider HTTP failure")
@@ -95,6 +99,7 @@ def forecast(city: str) -> dict:
             raise ValueError("invalid forecast field")
         datetime.strptime(date, "%Y-%m-%d")
         days.append({"date": date, "high_c": high, "low_c": low,
+                     "high_f": fahrenheit(high), "low_f": fahrenheit(low),
                      "rain_chance_percent": chance,
                      "conditions": WEATHER_CODES.get(code, f"weather code {code}")})
     return {"location": f"{place.get('name', city)}, {place.get('country', '')}".strip(", "),
